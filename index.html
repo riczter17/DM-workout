@@ -4,626 +4,625 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Couples Workout</title>
-
-<!-- iOS PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Workout">
 <meta name="theme-color" content="#0f1117">
-
-<!-- App icon (inline SVG as data URI) -->
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGYxMTE3Ii8+PHRleHQgeD0iOTAiIHk9IjEwNSIgZm9udC1zaXplPSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+RqzwvdGV4dD48L3N2Zz4=">
-
 <style>
-  :root {
-    --bg: #0f1117;
-    --card: #1a1d27;
-    --border: #2a2e3e;
-    --accent: #e8a838;
-    --accent-soft: rgba(232,168,56,0.12);
-    --green: #34d399;
-    --green-soft: rgba(52,211,153,0.12);
-    --red: #f87171;
-    --text: #e8e9ed;
-    --text-muted: #8b8fa3;
-    --text-dim: #5c6078;
-    --white: #ffffff;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
+:root {
+  --bg:#0f1117;--card:#1a1d27;--card-h:#22263a;--border:#2a2e3e;
+  --accent:#e8a838;--accent-s:rgba(232,168,56,0.12);
+  --green:#34d399;--green-s:rgba(52,211,153,0.12);
+  --red:#f87171;--red-s:rgba(248,113,113,0.12);
+  --txt:#e8e9ed;--muted:#8b8fa3;--dim:#5c6078;--white:#fff;
+  --safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;padding-top:var(--safe-t);padding-bottom:var(--safe-b);overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+#app{max-width:480px;margin:0 auto;padding:0 16px 40px}
+button{font-family:inherit;cursor:pointer;-webkit-appearance:none}
+input,select,textarea{font-family:inherit}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* ---- SHARED COMPONENTS ---- */
+.hdr{text-align:center;padding:28px 0 20px}.hdr-ic{font-size:40px;margin-bottom:6px}.hdr h1{font-size:24px;font-weight:700;color:var(--white);letter-spacing:-.5px}.hdr p{font-size:13px;color:var(--muted);margin-top:3px}
 
-  body {
-    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding-top: var(--safe-top);
-    padding-bottom: var(--safe-bottom);
-    overscroll-behavior: none;
-    -webkit-font-smoothing: antialiased;
-  }
+.btn{width:100%;border:none;border-radius:12px;font-size:15px;font-weight:700;padding:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-a{background:var(--accent);color:#1a1d27}.btn-a:disabled{opacity:.4}
+.btn-o{background:transparent;color:var(--accent);border:1.5px solid var(--accent);font-weight:600;font-size:14px;margin-top:10px}
+.btn-d{background:transparent;color:var(--muted);border:1px dashed var(--border);font-size:14px;font-weight:500;margin-top:8px;padding:12px}
+.btn-g{background:var(--green-s);color:var(--green);border:1.5px solid var(--green);margin-top:16px}
+.btn-gf{background:var(--green);color:#0f1117;border:none;margin-top:16px}
+.btn-sm{padding:8px 14px;background:var(--accent-s);color:var(--accent);border:1px solid var(--accent);border-radius:8px;font-size:13px;font-weight:600;width:auto}
+.btn-sm-m{padding:8px 14px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;width:auto}
 
-  #app {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 16px 32px;
-  }
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0 10px;position:sticky;top:0;background:var(--bg);z-index:10}
+.nav .bk{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:600;padding:8px 0}
+.nav-c{text-align:center}.nav-w{display:block;font-size:16px;font-weight:700;color:var(--white)}.nav-d{display:block;font-size:12px;color:var(--muted)}
+.nav-t{font-size:16px;font-weight:700;color:var(--white)}
+.nav .dl{background:transparent;border:none;font-size:18px;padding:8px;filter:grayscale(.5)}
 
-  /* Header */
-  .header { text-align: center; padding: 28px 0 20px; }
-  .header-icon { font-size: 40px; margin-bottom: 6px; }
-  .header h1 { font-size: 24px; font-weight: 700; color: var(--white); letter-spacing: -0.5px; }
-  .header p { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+.tabs{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:16px;border:1px solid var(--border)}
+.tb{flex:1;padding:10px 0;background:transparent;border:none;color:var(--muted);font-size:14px;font-weight:600;border-radius:8px}
+.tb.on{background:var(--accent-s);color:var(--accent);font-weight:700}
 
-  /* Buttons */
-  .btn-primary {
-    width: 100%; padding: 15px; background: var(--accent); color: #1a1d27;
-    border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-family: inherit;
-  }
-  .btn-primary:disabled { opacity: 0.4; }
-  .btn-secondary {
-    width: 100%; padding: 13px; background: transparent; color: var(--accent);
-    border: 1.5px solid var(--accent); border-radius: 12px; font-size: 14px; font-weight: 600;
-    cursor: pointer; margin-top: 10px; font-family: inherit;
-  }
-  .btn-past {
-    width: 100%; padding: 11px; background: transparent; color: var(--text-muted);
-    border: 1px dashed var(--border); border-radius: 12px; font-size: 14px;
-    cursor: pointer; margin-top: 8px; font-family: inherit;
-  }
-  .btn-complete {
-    width: 100%; padding: 15px; background: var(--green-soft); color: var(--green);
-    border: 1.5px solid var(--green); border-radius: 12px; font-size: 15px; font-weight: 700;
-    cursor: pointer; margin-top: 16px; font-family: inherit;
-  }
-  .btn-completed {
-    width: 100%; padding: 15px; background: var(--green); color: #0f1117;
-    border: none; border-radius: 12px; font-size: 15px; font-weight: 700;
-    cursor: pointer; margin-top: 16px; font-family: inherit;
-  }
+.sec{margin-top:24px}.sec-t{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
 
-  /* Date picker */
-  .date-picker-card {
-    margin-top: 8px; padding: 16px; background: var(--card);
-    border-radius: 12px; border: 1px solid var(--accent);
-  }
-  .date-picker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .date-picker-header span { font-size: 14px; font-weight: 600; }
-  .date-picker-header button { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
-  .date-input {
-    width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 16px; font-family: inherit;
-    color-scheme: dark; outline: none;
-  }
-  .date-exists { margin-top: 8px; font-size: 12px; color: var(--accent); font-style: italic; }
+.fld{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--txt);font-size:16px;font-weight:600;outline:none}
+.fld-s{font-size:14px;font-weight:400;appearance:none}
+.lbl{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 
-  /* Section */
-  .section { margin-top: 24px; }
-  .section-title { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border)}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
 
-  /* Session cards */
-  .session-card {
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--card); border-radius: 12px; padding: 13px 16px; margin-bottom: 8px;
-    cursor: pointer; border: 1px solid var(--border);
-  }
-  .session-card:active { background: #22263a; }
-  .session-card-left { display: flex; align-items: center; gap: 12px; }
-  .week-badge {
-    background: var(--accent-soft); color: var(--accent); padding: 6px 10px;
-    border-radius: 8px; font-size: 13px; font-weight: 700; min-width: 36px; text-align: center;
-  }
-  .session-date { font-size: 14px; font-weight: 600; }
-  .session-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .badge-complete { color: var(--green); font-size: 20px; font-weight: 700; }
-  .badge-progress { color: var(--text-dim); font-size: 16px; }
+/* ---- SESSION CARDS ---- */
+.sc{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-radius:12px;padding:13px 16px;margin-bottom:8px;cursor:pointer;border:1px solid var(--border)}
+.sc:active{background:var(--card-h)}
+.sc-l{display:flex;align-items:center;gap:12px}
+.wk{background:var(--accent-s);color:var(--accent);padding:6px 10px;border-radius:8px;font-size:13px;font-weight:700;min-width:36px;text-align:center}
+.sc-dt{font-size:14px;font-weight:600}.sc-m{font-size:12px;color:var(--muted);margin-top:2px}
+.bg-c{color:var(--green);font-size:20px;font-weight:700}.bg-p{color:var(--dim);font-size:16px}
 
-  /* Legend */
-  .legend { margin-top: 24px; background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
-  .legend h3 { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
-  .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 13px; }
-  .legend-label { font-weight: 600; min-width: 70px; }
-  .legend-desc { color: var(--text-muted); }
+/* ---- EXERCISE CARDS ---- */
+.ec{background:var(--card);border-radius:12px;margin-bottom:8px;border:1px solid var(--border);overflow:hidden}
+.eh{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;cursor:pointer}.eh:active{background:var(--card-h)}
+.eh-l{display:flex;align-items:center;gap:10px}.eh-s{font-size:18px}
+.en{font-size:14px;font-weight:600}.et{font-size:12px;color:var(--muted);margin-top:1px}
+.ep{display:flex;align-items:center;gap:6px}.chv{color:var(--dim);font-size:11px;margin-left:4px}
+.eb{padding:0 16px 16px;border-top:1px solid var(--border)}
+.lw{font-size:12px;color:var(--dim);padding:8px 0 4px;border-bottom:1px dashed var(--border);margin-bottom:12px}
+.pb{margin-top:12px}.pl{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.ir{display:flex;gap:10px;margin-bottom:10px}.ig{flex:1}
+.sr{display:flex;gap:6px}
+.sb{flex:1;padding:8px 4px;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-align:center}
+.sb.on{background:var(--accent-s);border:1.5px solid var(--accent)}
+.se{display:block;font-size:16px;margin-bottom:2px}.sl{display:block;font-size:10px;color:var(--muted);font-weight:600}
+.rmx{background:transparent;border:none;color:var(--red);font-size:13px;font-weight:600;padding:6px 0;margin-top:8px;width:auto}
 
-  /* Nav bar */
-  .nav-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 0 10px; position: sticky; top: 0; background: var(--bg); z-index: 10;
-  }
-  .nav-bar .back { background: transparent; border: none; color: var(--accent); font-size: 15px; font-weight: 600; cursor: pointer; padding: 8px 0; font-family: inherit; }
-  .nav-center { text-align: center; }
-  .nav-week { display: block; font-size: 16px; font-weight: 700; color: var(--white); }
-  .nav-date { display: block; font-size: 12px; color: var(--text-muted); }
-  .nav-title { font-size: 16px; font-weight: 700; color: var(--white); }
-  .nav-bar .del { background: transparent; border: none; font-size: 18px; cursor: pointer; padding: 8px; filter: grayscale(0.5); }
+/* ---- WALK ---- */
+.wc{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)}
+.wt{font-size:16px;font-weight:700;color:var(--white);margin-bottom:4px}
+.wd{font-size:13px;color:var(--muted);margin-bottom:16px}
+.wr{display:flex;gap:12px}.wg{flex:1}
+.wtip{margin-top:12px;padding:12px 16px;background:var(--accent-s);border-radius:10px;font-size:13px;color:var(--accent);line-height:1.5}
+textarea{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--txt);font-size:14px;resize:vertical;outline:none;line-height:1.5}
 
-  /* Tabs */
-  .tab-bar { display: flex; gap: 4px; background: var(--card); border-radius: 10px; padding: 4px; margin-bottom: 16px; border: 1px solid var(--border); }
-  .tab {
-    flex: 1; padding: 10px 0; background: transparent; border: none;
-    color: var(--text-muted); font-size: 14px; font-weight: 600; border-radius: 8px;
-    cursor: pointer; font-family: inherit;
-  }
-  .tab.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+/* ---- DATE PICKER ---- */
+.dpc{margin-top:8px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--accent)}
+.dph{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dph span{font-size:14px;font-weight:600}
+.dph button{background:transparent;border:none;color:var(--muted);font-size:18px;padding:4px 8px}
+.di{width:100%;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--txt);font-size:16px;color-scheme:dark;outline:none}
+.dex{margin-top:8px;font-size:12px;color:var(--accent);font-style:italic}
 
-  /* Exercise cards */
-  .ex-card { background: var(--card); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); overflow: hidden; }
-  .ex-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 13px 16px; cursor: pointer;
-  }
-  .ex-header:active { background: #22263a; }
-  .ex-header-left { display: flex; align-items: center; gap: 10px; }
-  .ex-status { font-size: 18px; }
-  .ex-name { font-size: 14px; font-weight: 600; }
-  .ex-target { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-  .ex-peek { display: flex; align-items: center; gap: 6px; }
-  .chevron { color: var(--text-dim); font-size: 11px; margin-left: 4px; }
+/* ---- LEGEND ---- */
+.lgd{margin-top:24px;background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border)}
+.lgd h3{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+.lr{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:13px}
+.ll{font-weight:600;min-width:70px}.ld{color:var(--muted)}
 
-  .ex-body { padding: 0 16px 16px; border-top: 1px solid var(--border); }
-  .last-week { font-size: 12px; color: var(--text-dim); padding: 8px 0 4px; border-bottom: 1px dashed var(--border); margin-bottom: 12px; }
+/* ---- PICKER OVERLAY ---- */
+.po{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.ps{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;padding:20px 16px calc(20px + var(--safe-b))}
+.ps h2{font-size:16px;font-weight:700;color:var(--white);margin-bottom:4px}
+.ps>p{font-size:13px;color:var(--muted);margin-bottom:16px}
+.gl{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;padding-top:8px;border-top:1px solid var(--border)}
+.gl:first-of-type{border-top:none;margin-top:0}
+.pi{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer}
+.pi.on{border-color:var(--accent);background:var(--accent-s)}
+.pc{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pi.on .pc{border-color:var(--accent);background:var(--accent);color:#1a1d27}
+.pn{font-size:14px;font-weight:600}.pm{font-size:12px;color:var(--muted);margin-top:1px}
 
-  .person-block { margin-top: 12px; }
-  .person-label { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
-  .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-  .input-group { flex: 1; }
-  .input-label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-  .input-field {
-    width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 16px; font-weight: 600;
-    outline: none; font-family: inherit;
-  }
+/* ---- LIBRARY ---- */
+.lc{background:var(--card);border-radius:12px;padding:14px 16px;margin-bottom:8px;border:1px solid var(--border)}
+.fc{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--accent);margin-bottom:16px}
+.fc h3{font-size:15px;font-weight:700;color:var(--white);margin-bottom:12px}
+.fr{margin-bottom:12px}.fri{display:flex;gap:10px;margin-bottom:12px}.fri>div{flex:1}
+.tg{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.tgb{width:44px;height:26px;border-radius:13px;border:none;padding:2px;transition:background .2s}
+.tgb.on{background:var(--accent)}.tgb.off{background:var(--border)}
+.tgk{width:22px;height:22px;border-radius:11px;background:var(--white);display:block;transition:margin-left .2s}
+.tgb.on .tgk{margin-left:18px}
+.tpl-tag{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer}
+.tpl-tag.on{background:var(--accent-s);color:var(--accent);border:1px solid var(--accent)}
+.tpl-tag.off{background:transparent;color:var(--muted);border:1px solid var(--border)}
 
-  .score-row { display: flex; gap: 6px; }
-  .score-btn {
-    flex: 1; padding: 8px 4px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer; text-align: center; font-family: inherit;
-  }
-  .score-btn.selected { background: var(--accent-soft); border: 1.5px solid var(--accent); }
-  .score-emoji { display: block; font-size: 16px; margin-bottom: 2px; }
-  .score-label-text { display: block; font-size: 10px; color: var(--text-muted); font-weight: 600; }
-
-  /* Walk */
-  .walk-card { background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
-  .walk-title { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
-  .walk-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
-  .walk-row { display: flex; gap: 12px; }
-  .walk-group { flex: 1; }
-  .walk-input {
-    width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 16px; font-weight: 600;
-    outline: none; font-family: inherit;
-  }
-  .walk-select {
-    width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 14px; outline: none;
-    font-family: inherit; appearance: none;
-  }
-  .walk-tip {
-    margin-top: 12px; padding: 12px 16px; background: var(--accent-soft);
-    border-radius: 10px; font-size: 13px; color: var(--accent); line-height: 1.5;
-  }
-  textarea {
-    width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text); font-size: 14px; resize: vertical;
-    outline: none; font-family: inherit; line-height: 1.5;
-  }
-  textarea.large { font-size: 14px; line-height: 1.6; margin-top: 8px; }
-
-  /* Notes */
-  .notes-card { background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
-
-  /* Progress */
-  .progress-card { background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); margin-bottom: 12px; }
-  .progress-card h3 { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 12px; }
-  .progress-header {
-    display: flex; padding: 0 0 8px; border-bottom: 1px solid var(--border);
-    font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .progress-row { display: flex; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; align-items: center; }
-  .col-wk { width: 36px; text-align: center; font-weight: 600; color: var(--text-dim); }
-  .col { flex: 1; text-align: center; }
-
-  /* Utility */
-  .mt-12 { margin-top: 12px; }
-  .mt-16 { margin-top: 16px; }
-  .hidden { display: none; }
+/* ---- PROGRESS ---- */
+.prc{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:12px}
+.prc h3{font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px}
+.prh{display:flex;padding:0 0 8px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.prr{display:flex;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;align-items:center}
+.cw{width:36px;text-align:center;font-weight:600;color:var(--dim)}.cc{flex:1;text-align:center}
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
-const EXERCISES = [
-  { id: "squats", name: "Bodyweight Squats", targetReps: "10-12", hasWeight: false, unit: "reps" },
-  { id: "pushups", name: "Incline Push-ups", targetReps: "8-10", hasWeight: false, unit: "reps" },
-  { id: "bridges", name: "Glute Bridges", targetReps: "12-15", hasWeight: false, unit: "reps" },
-  { id: "plank", name: "Plank Hold", targetReps: "20-30", hasWeight: false, unit: "sec" },
-  { id: "rows", name: "DB Rows", targetReps: "10-12", hasWeight: true, unit: "reps" },
-  { id: "holds", name: "Single-arm Holds", targetReps: "10-15", hasWeight: false, unit: "sec" },
+// ===== CONSTANTS =====
+const GROUPS=["chest","back","shoulders","legs","core"];
+const GL={chest:"Chest",back:"Back",shoulders:"Shoulders",legs:"Legs",core:"Core"};
+const SC={1:{l:"Easy",e:"\u{1F7E2}",d:"Could do more"},2:{l:"Hard",e:"\u{1F7E1}",d:"Completed but challenging"},3:{l:"Failed",e:"\u{1F534}",d:"Didn't complete target"}};
+
+const DEF_LIB=[
+  {id:"pushups",name:"Push-ups",group:"chest",wt:false,unit:"reps",target:"8-10",note:"Wall / incline / full"},
+  {id:"db_incline_chest",name:"DB Incline Chest Press",group:"chest",wt:true,unit:"reps",target:"8-10",note:""},
+  {id:"db_floor_press",name:"DB Floor Press",group:"chest",wt:true,unit:"reps",target:"8-10",note:""},
+  {id:"rows",name:"DB Rows",group:"back",wt:true,unit:"reps",target:"10-12",note:"Each arm"},
+  {id:"band_pull",name:"Band Pull-aparts",group:"back",wt:false,unit:"reps",target:"12-15",note:""},
+  {id:"shoulder_press",name:"Shoulder Press",group:"shoulders",wt:true,unit:"reps",target:"8-10",note:""},
+  {id:"squats",name:"Bodyweight Squats",group:"legs",wt:false,unit:"reps",target:"10-12",note:""},
+  {id:"goblet_squats",name:"Goblet Squats",group:"legs",wt:true,unit:"reps",target:"10-12",note:""},
+  {id:"bridges",name:"Glute Bridges",group:"legs",wt:false,unit:"reps",target:"12-15",note:""},
+  {id:"db_rdl",name:"DB Romanian Deadlifts",group:"legs",wt:true,unit:"reps",target:"10-12",note:""},
+  {id:"plank",name:"Plank Hold",group:"core",wt:false,unit:"sec",target:"20-30",note:""},
+  {id:"dead_bug",name:"Dead Bug",group:"core",wt:false,unit:"reps",target:"8-10",note:"Per side"},
+  {id:"holds",name:"Single-arm Holds",group:"core",wt:false,unit:"sec",target:"10-15",note:""},
 ];
+const DEF_TPL=["pushups","rows","squats","bridges","plank","holds"];
+const OLD_EX_IDS=["squats","pushups","bridges","plank","rows","holds"];
 
-const SCORES = {
-  1: { label: "Easy", emoji: "\u{1F7E2}", desc: "Could do more" },
-  2: { label: "Hard", emoji: "\u{1F7E1}", desc: "Completed but challenging" },
-  3: { label: "Failed", emoji: "\u{1F534}", desc: "Didn't complete target" },
-};
+// ===== STORAGE =====
+const K={s:"cw2-sessions",l:"cw2-library",t:"cw2-template"};
+function ld(k,fb){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb}catch{return fb}}
+function sv(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
-const STORAGE_KEY = "couples-workout-v1";
+// ===== MIGRATION =====
+function migrate(){
+  // Check if already migrated to v2
+  if(localStorage.getItem(K.s))return;
 
-function loadSessions() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
-}
-function saveSessions(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+  // Try old v1 key
+  const old=ld("couples-workout-v1",null);
+  if(!old||!old.length)return;
 
-function newSession(dateStr) {
-  const exercises = {};
-  EXERCISES.forEach(ex => {
-    exercises[ex.id] = {
-      her: { r1: "", r2: "", weight: "", score: null },
-      him: { r1: "", r2: "", weight: "", score: null },
+  // Convert old sessions to new format
+  const converted=old.map(s=>{
+    const exIds=Object.keys(s.exercises).filter(id=>OLD_EX_IDS.includes(id));
+    return {
+      date:s.date,
+      selectedExercises:exIds.length>0?exIds:[...DEF_TPL],
+      exercises:s.exercises||{},
+      walk:s.walk||{duration:"15",pace:"",notes:""},
+      notes:s.notes||"",
+      completed:!!s.completed
     };
   });
-  return { date: dateStr, exercises, walk: { duration: "15", pace: "", notes: "" }, notes: "", completed: false };
+  sv(K.s,converted);
+}
+migrate();
+
+// ===== STATE =====
+let lib=ld(K.l,DEF_LIB);
+let tpl=ld(K.t,DEF_TPL);
+let sess=ld(K.s,[]);
+
+let view="home";        // home | session | progress | library
+let curDate=null;
+let tab="log";           // log | walk | notes
+let openEx=null;
+let dpOpen=false, dpVal="";
+let pickerOpen=false;
+let libFormOpen=false;
+let formState=null;      // {id?,name,group,wt,unit,target,note}
+
+const $=document.getElementById("app");
+
+// ===== HELPERS =====
+function gex(id){return lib.find(e=>e.id===id)}
+function fd(d){return new Date(d+"T00:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
+function wn(d){const sorted=[...sess].sort((a,b)=>a.date.localeCompare(b.date));return sorted.findIndex(s=>s.date===d)+1}
+function gid(n){return n.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')+'_'+Date.now().toString(36)}
+function gsess(){return sess.find(s=>s.date===curDate)}
+function today(){return new Date().toISOString().split("T")[0]}
+
+function mkExData(){return{her:{r1:"",r2:"",weight:"",score:null},him:{r1:"",r2:"",weight:"",score:null}}}
+
+function mkSess(date,exIds){
+  const exs={};
+  exIds.forEach(id=>{exs[id]=mkExData()});
+  return{date,selectedExercises:exIds,exercises:exs,walk:{duration:"15",pace:"",notes:""},notes:"",completed:false};
 }
 
-function formatDate(d) {
-  return new Date(d + "T00:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+// ===== RENDER ENGINE =====
+// Only re-render specific parts when possible
+function render(){
+  if(pickerOpen)return rPicker();
+  switch(view){
+    case"home":return rHome();
+    case"session":return rSession();
+    case"progress":return rProgress();
+    case"library":return rLibrary();
+  }
 }
 
-function weekNum(sessions, dateStr) {
-  const sorted = [...sessions].sort((a, b) => a.date.localeCompare(b.date));
-  return sorted.findIndex(s => s.date === dateStr) + 1;
-}
+// ----- HOME -----
+function rHome(){
+  const sorted=[...sess].sort((a,b)=>b.date.localeCompare(a.date));
+  let h=`<div class="hdr"><div class="hdr-ic">\u{1F46B}</div><h1>Couples Workout</h1><p>Saturday Programme Tracker</p></div>
+    <button class="btn btn-a" onclick="doCreate()">+ Start Today's Session</button>`;
 
-// State
-let sessions = loadSessions();
-let currentDate = null;
-let currentView = "home";
-let currentTab = "log";
-let expandedEx = null;
-let showDatePicker = false;
-let customDate = "";
-
-const $app = document.getElementById("app");
-
-function render() {
-  if (currentView === "home") renderHome();
-  else if (currentView === "session") renderSession();
-  else if (currentView === "progress") renderProgress();
-}
-
-function renderHome() {
-  const sorted = [...sessions].sort((a, b) => b.date.localeCompare(a.date));
-  let html = `
-    <div class="header">
-      <div class="header-icon">\u{1F46B}</div>
-      <h1>Couples Workout</h1>
-      <p>Saturday Programme Tracker</p>
-    </div>
-    <button class="btn-primary" onclick="createSession()">\u{FF0B} Start Today's Session</button>
-  `;
-
-  if (!showDatePicker) {
-    html += `<button class="btn-past" onclick="toggleDatePicker()">\u{1F4C5} Log a Past Session</button>`;
-  } else {
-    const today = new Date().toISOString().split("T")[0];
-    const exists = customDate && sessions.find(s => s.date === customDate);
-    html += `
-      <div class="date-picker-card">
-        <div class="date-picker-header">
-          <span>Select session date</span>
-          <button onclick="toggleDatePicker()">\u{2715}</button>
-        </div>
-        <input type="date" class="date-input" value="${customDate}" max="${today}" onchange="customDate=this.value;render()">
-        ${exists ? '<div class="date-exists">Session already exists for this date. Tapping below will open it.</div>' : ''}
-        <button class="btn-primary mt-12" ${!customDate ? 'disabled' : ''} onclick="createSession('${customDate}')">
-          ${exists ? 'Open Session' : 'Create Session'}
-        </button>
-      </div>
-    `;
+  if(!dpOpen){
+    h+=`<button class="btn btn-d" onclick="dpOpen=true;dpVal='';render()">\u{1F4C5} Log a Past Session</button>`;
+  }else{
+    const ex=dpVal&&sess.find(s=>s.date===dpVal);
+    h+=`<div class="dpc"><div class="dph"><span>Select session date</span><button onclick="dpOpen=false;dpVal='';render()">\u{2715}</button></div>
+      <input type="date" class="di" id="dpInput" value="${dpVal}" max="${today()}" onchange="dpVal=this.value;render()">
+      ${ex?'<div class="dex">Session exists for this date. Tap below to open.</div>':''}
+      <button class="btn btn-a mt12" ${!dpVal?'disabled':''} onclick="doCreate(dpVal)">${ex?'Open Session':'Create Session'}</button>
+    </div>`;
   }
 
-  if (sorted.length > 0) {
-    html += `<div class="section"><h2 class="section-title">Past Sessions</h2>`;
-    sorted.forEach(s => {
-      const wk = weekNum(sessions, s.date);
-      const logged = Object.values(s.exercises).filter(e => e.her.score !== null).length;
-      html += `
-        <div class="session-card" onclick="openSession('${s.date}')">
-          <div class="session-card-left">
-            <div class="week-badge">W${wk}</div>
-            <div>
-              <div class="session-date">${formatDate(s.date)}</div>
-              <div class="session-meta">${logged}/${EXERCISES.length} exercises logged${(s.walk.duration !== "15" || s.walk.notes) ? ' \u{00B7} Walk logged' : ''}</div>
-            </div>
-          </div>
-          <div>${s.completed ? '<span class="badge-complete">\u{2713}</span>' : '<span class="badge-progress">\u{2022}\u{2022}\u{2022}</span>'}</div>
-        </div>
-      `;
+  if(sorted.length>0){
+    h+=`<div class="sec"><h2 class="sec-t">Sessions</h2>`;
+    sorted.forEach(s=>{
+      const w=wn(s.date);
+      const logged=s.selectedExercises?s.selectedExercises.filter(id=>s.exercises[id]&&s.exercises[id].her.score!==null).length:0;
+      const total=s.selectedExercises?s.selectedExercises.length:0;
+      h+=`<div class="sc" onclick="doOpen('${s.date}')">
+        <div class="sc-l"><div class="wk">W${w}</div><div>
+          <div class="sc-dt">${fd(s.date)}</div>
+          <div class="sc-m">${logged}/${total} logged${s.walk&&(s.walk.duration!=="15"||s.walk.notes)?' \u{00B7} Walk':''}${s.notes?' \u{00B7} Notes':''}</div>
+        </div></div>
+        <div>${s.completed?'<span class="bg-c">\u{2713}</span>':'<span class="bg-p">\u{2022}\u{2022}\u{2022}</span>'}</div>
+      </div>`;
     });
-    html += `</div>`;
+    h+=`</div>`;
   }
 
-  if (sessions.filter(s => s.completed).length >= 2) {
-    html += `<button class="btn-secondary" onclick="currentView='progress';render()">\u{1F4CA} View Progress</button>`;
-  }
+  if(sess.filter(s=>s.completed).length>=2)
+    h+=`<button class="btn btn-o" onclick="view='progress';render()">\u{1F4CA} View Progress</button>`;
 
-  html += `
-    <div class="legend">
-      <h3>Session Score Guide</h3>
-      ${[1,2,3].map(sc => `
-        <div class="legend-row">
-          <span>${SCORES[sc].emoji}</span>
-          <span class="legend-label">${sc} = ${SCORES[sc].label}</span>
-          <span class="legend-desc">${SCORES[sc].desc}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
+  h+=`<button class="btn btn-o" onclick="view='library';libFormOpen=false;formState=null;render()">\u{1F4DA} Exercise Library</button>`;
 
-  $app.innerHTML = html;
+  h+=`<div class="lgd"><h3>Session Score Guide</h3>
+    ${[1,2,3].map(s=>`<div class="lr"><span>${SC[s].e}</span><span class="ll">${s} = ${SC[s].l}</span><span class="ld">${SC[s].d}</span></div>`).join('')}
+  </div>`;
+  $.innerHTML=h;
 }
 
-function renderSession() {
-  const s = sessions.find(x => x.date === currentDate);
-  if (!s) { currentView = "home"; render(); return; }
-  const wk = weekNum(sessions, currentDate);
+// ----- SESSION -----
+function rSession(){
+  const s=gsess();
+  if(!s){view="home";return render()}
+  const w=wn(curDate);
 
-  let html = `
-    <div class="nav-bar">
-      <button class="back" onclick="currentView='home';expandedEx=null;render()">\u{2190} Back</button>
-      <div class="nav-center">
-        <span class="nav-week">Week ${wk}</span>
-        <span class="nav-date">${formatDate(currentDate)}</span>
-      </div>
-      <button class="del" onclick="deleteSession('${currentDate}')">\u{1F5D1}</button>
-    </div>
-    <div class="tab-bar">
-      <button class="tab ${currentTab === 'log' ? 'active' : ''}" onclick="currentTab='log';render()">Log</button>
-      <button class="tab ${currentTab === 'walk' ? 'active' : ''}" onclick="currentTab='walk';render()">Walk</button>
-      <button class="tab ${currentTab === 'notes' ? 'active' : ''}" onclick="currentTab='notes';render()">Notes</button>
-    </div>
-  `;
+  let h=`<div class="nav">
+    <button class="bk" onclick="view='home';openEx=null;render()">\u{2190} Back</button>
+    <div class="nav-c"><span class="nav-w">Week ${w}</span><span class="nav-d">${fd(curDate)}</span></div>
+    <button class="dl" onclick="doDel()">\u{1F5D1}</button>
+  </div>
+  <div class="tabs">
+    <button class="tb ${tab==='log'?'on':''}" onclick="tab='log';render()">Log</button>
+    <button class="tb ${tab==='walk'?'on':''}" onclick="tab='walk';render()">Walk</button>
+    <button class="tb ${tab==='notes'?'on':''}" onclick="tab='notes';render()">Notes</button>
+  </div>`;
 
-  if (currentTab === "log") {
-    EXERCISES.forEach(ex => {
-      const d = s.exercises[ex.id];
-      const isOpen = expandedEx === ex.id;
-      const herDone = d.her.score !== null;
-      const himDone = d.him.score !== null;
-      const status = herDone && himDone ? "\u{2705}" : (herDone || himDone ? "\u{1F536}" : "\u{2B1C}");
+  if(tab==="log"){
+    if(!s.selectedExercises||s.selectedExercises.length===0){
+      h+=`<div style="text-align:center;padding:40px 0;color:var(--muted)">
+        <p style="font-size:14px;margin-bottom:12px">No exercises selected for this session.</p>
+        <button class="btn btn-a" style="width:auto;padding:12px 24px;display:inline-flex" onclick="pickerOpen=true;render()">+ Add exercises</button>
+      </div>`;
+    }else{
+      s.selectedExercises.forEach(exId=>{
+        const ex=gex(exId);
+        if(!ex)return;
+        const d=s.exercises[exId];
+        if(!d)return;
+        const isOpen=openEx===exId;
+        const hd=d.her.score!==null,id_=d.him.score!==null;
+        const st=hd&&id_?"\u{2705}":(hd||id_?"\u{1F536}":"\u{2B1C}");
 
-      // Last week hint
-      const completed = [...sessions].filter(x => x.completed && x.date !== currentDate).sort((a,b) => b.date.localeCompare(a.date));
-      const lastWeek = completed.length > 0 ? completed[0] : null;
-      let hint = "";
-      if (lastWeek) {
-        const ld = lastWeek.exercises[ex.id];
-        hint = `Last week \u{2014} Her: ${ld.her.score ? SCORES[ld.her.score].emoji : '\u{2014}'} Him: ${ld.him.score ? SCORES[ld.him.score].emoji : '\u{2014}'}${ex.hasWeight && ld.her.weight ? ' \u{00B7} ' + ld.her.weight + 'kg' : ''}`;
-      }
+        // find last completed session with this exercise
+        const prev=[...sess].filter(x=>x.completed&&x.date!==curDate&&x.selectedExercises&&x.selectedExercises.includes(exId)).sort((a,b)=>b.date.localeCompare(a.date));
+        let hint="";
+        if(prev.length>0&&prev[0].exercises[exId]){
+          const ld_=prev[0].exercises[exId];
+          hint=`Last wk: Her ${ld_.her.score?SC[ld_.her.score].e:'\u{2014}'} Him ${ld_.him.score?SC[ld_.him.score].e:'\u{2014}'}${ex.wt&&ld_.her.weight?' \u{00B7} '+ld_.her.weight+'kg':''}`;
+        }
 
-      html += `<div class="ex-card">
-        <div class="ex-header" onclick="expandedEx=expandedEx==='${ex.id}'?null:'${ex.id}';render()">
-          <div class="ex-header-left">
-            <span class="ex-status">${status}</span>
-            <div>
-              <div class="ex-name">${ex.name}</div>
-              <div class="ex-target">2 \u{00D7} ${ex.targetReps} ${ex.unit}${ex.hasWeight ? ' (each arm)' : ''}</div>
-            </div>
-          </div>
-          <div class="ex-peek">
-            ${herDone ? SCORES[d.her.score].emoji : ''}
-            ${himDone ? SCORES[d.him.score].emoji : ''}
-            <span class="chevron">${isOpen ? '\u{25B2}' : '\u{25BC}'}</span>
-          </div>
+        h+=`<div class="ec"><div class="eh" onclick="openEx=openEx==='${exId}'?null:'${exId}';render()">
+          <div class="eh-l"><span class="eh-s">${st}</span><div>
+            <div class="en">${ex.name}</div>
+            <div class="et">2 \u{00D7} ${ex.target} ${ex.unit}${ex.note?' ('+ex.note+')':''}</div>
+          </div></div>
+          <div class="ep">${hd?SC[d.her.score].e:''}${id_?SC[d.him.score].e:''}<span class="chv">${isOpen?'\u{25B2}':'\u{25BC}'}</span></div>
         </div>`;
 
-      if (isOpen) {
-        html += `<div class="ex-body">`;
-        if (hint) html += `<div class="last-week">${hint}</div>`;
+        if(isOpen){
+          h+=`<div class="eb">`;
+          if(hint)h+=`<div class="lw">${hint}</div>`;
 
-        ["her", "him"].forEach(person => {
-          const pd = d[person];
-          html += `
-            <div class="person-block">
-              <div class="person-label">${person === "her" ? "\u{1F469} Her" : "\u{1F468} Him"}</div>
-              <div class="input-row">
-                <div class="input-group">
-                  <label class="input-label">R1</label>
-                  <input type="number" inputmode="numeric" class="input-field" value="${pd.r1}" placeholder="${ex.targetReps.split('-')[0]}"
-                    onchange="updateEx('${ex.id}','${person}','r1',this.value)">
-                </div>
-                <div class="input-group">
-                  <label class="input-label">R2</label>
-                  <input type="number" inputmode="numeric" class="input-field" value="${pd.r2}" placeholder="${ex.targetReps.split('-')[0]}"
-                    onchange="updateEx('${ex.id}','${person}','r2',this.value)">
-                </div>
-                ${ex.hasWeight ? `
-                <div class="input-group">
-                  <label class="input-label">kg</label>
-                  <input type="number" inputmode="decimal" class="input-field" value="${pd.weight}" placeholder="5"
-                    onchange="updateEx('${ex.id}','${person}','weight',this.value)">
-                </div>` : ''}
+          ["her","him"].forEach(p=>{
+            const pd=d[p];
+            h+=`<div class="pb"><div class="pl">${p==="her"?"\u{1F469} Her":"\u{1F468} Him"}</div>
+              <div class="ir">
+                <div class="ig"><label class="lbl">R1</label>
+                  <input type="number" inputmode="numeric" class="fld" value="${pd.r1}" placeholder="${ex.target.split('-')[0]}" id="ex_${exId}_${p}_r1" onblur="doExUp('${exId}','${p}','r1',this.value)"></div>
+                <div class="ig"><label class="lbl">R2</label>
+                  <input type="number" inputmode="numeric" class="fld" value="${pd.r2}" placeholder="${ex.target.split('-')[0]}" id="ex_${exId}_${p}_r2" onblur="doExUp('${exId}','${p}','r2',this.value)"></div>
+                ${ex.wt?`<div class="ig"><label class="lbl">kg</label>
+                  <input type="number" inputmode="decimal" class="fld" value="${pd.weight}" placeholder="5" id="ex_${exId}_${p}_wt" onblur="doExUp('${exId}','${p}','weight',this.value)"></div>`:''}
               </div>
-              <div class="score-row">
-                ${[1,2,3].map(sc => `
-                  <button class="score-btn ${pd.score === sc ? 'selected' : ''}" onclick="updateEx('${ex.id}','${person}','score',${sc})">
-                    <span class="score-emoji">${SCORES[sc].emoji}</span>
-                    <span class="score-label-text">${SCORES[sc].label}</span>
-                  </button>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      }
-      html += `</div>`;
-    });
+              <div class="sr">${[1,2,3].map(sc=>`<button class="sb${pd.score===sc?' on':''}" onclick="doExUp('${exId}','${p}','score',${sc})">
+                <span class="se">${SC[sc].e}</span><span class="sl">${SC[sc].l}</span></button>`).join('')}</div>
+            </div>`;
+          });
+          h+=`<button class="rmx" onclick="doRmEx('${exId}')">\u{2212} Remove from session</button></div>`;
+        }
+        h+=`</div>`;
+      });
+    }
+    h+=`<button class="btn btn-d mt12" onclick="pickerOpen=true;render()">+ Add / swap exercise</button>`;
   }
 
-  if (currentTab === "walk") {
-    html += `
-      <div class="walk-card">
-        <div class="walk-title">\u{1F6B6} Zone 1-2 Cardio Walk</div>
-        <p class="walk-desc">Conversational pace, brisk but can talk easily</p>
-        <div class="walk-row">
-          <div class="walk-group">
-            <label class="input-label">Duration (min)</label>
-            <input type="number" inputmode="numeric" class="walk-input" value="${s.walk.duration}" onchange="updateWalk('duration',this.value)">
-          </div>
-          <div class="walk-group">
-            <label class="input-label">Pace feel</label>
-            <select class="walk-select" onchange="updateWalk('pace',this.value)">
-              <option value="" ${!s.walk.pace ? 'selected' : ''}>Select...</option>
-              <option value="too_easy" ${s.walk.pace === 'too_easy' ? 'selected' : ''}>Too easy (zone 1)</option>
-              <option value="just_right" ${s.walk.pace === 'just_right' ? 'selected' : ''}>Just right (zone 1-2)</option>
-              <option value="slightly_hard" ${s.walk.pace === 'slightly_hard' ? 'selected' : ''}>Slightly hard (zone 2)</option>
-              <option value="too_hard" ${s.walk.pace === 'too_hard' ? 'selected' : ''}>Too hard (zone 3+)</option>
-            </select>
-          </div>
-        </div>
-        <div class="mt-16">
-          <label class="input-label">Walk notes</label>
-          <textarea rows="3" placeholder="Route, weather, how she felt, conversation highlights..." onchange="updateWalk('notes',this.value)">${s.walk.notes}</textarea>
-        </div>
+  if(tab==="walk"){
+    h+=`<div class="wc">
+      <div class="wt">\u{1F6B6} Zone 1-2 Cardio Walk</div>
+      <p class="wd">Conversational pace, brisk but can talk easily</p>
+      <div class="wr">
+        <div class="wg"><label class="lbl">Duration (min)</label>
+          <input type="number" inputmode="numeric" class="fld" value="${s.walk.duration}" id="walk_dur" onblur="doWalk('duration',this.value)"></div>
+        <div class="wg"><label class="lbl">Pace feel</label>
+          <select class="fld fld-s" id="walk_pace" onchange="doWalk('pace',this.value)">
+            <option value="" ${!s.walk.pace?'selected':''}>Select...</option>
+            <option value="too_easy" ${s.walk.pace==='too_easy'?'selected':''}>Too easy (zone 1)</option>
+            <option value="just_right" ${s.walk.pace==='just_right'?'selected':''}>Just right (zone 1-2)</option>
+            <option value="slightly_hard" ${s.walk.pace==='slightly_hard'?'selected':''}>Slightly hard (zone 2)</option>
+            <option value="too_hard" ${s.walk.pace==='too_hard'?'selected':''}>Too hard (zone 3+)</option>
+          </select></div>
       </div>
-      <div class="walk-tip"><strong>Reminder:</strong> ~2,000 steps from a 15-min brisk walk. This counts towards your 8k daily target.</div>
-    `;
-  }
-
-  if (currentTab === "notes") {
-    html += `
-      <div class="notes-card">
-        <div class="walk-title">\u{1F4DD} Session Notes</div>
-        <textarea class="large" rows="6" placeholder="Progression observations, form corrections, how she's feeling about the programme, what to adjust next week..." onchange="updateNotes(this.value)">${s.notes}</textarea>
+      <div class="mt16"><label class="lbl">Walk notes</label>
+        <textarea rows="3" id="walk_notes" placeholder="Route, weather, how she felt..." onblur="doWalk('notes',this.value)">${s.walk.notes||''}</textarea>
       </div>
-      <button class="${s.completed ? 'btn-completed' : 'btn-complete'}" onclick="toggleComplete()">
-        ${s.completed ? '\u{2713} Session Complete \u{2014} Tap to Reopen' : 'Mark Session Complete'}
-      </button>
-    `;
+    </div>
+    <div class="wtip"><strong>Reminder:</strong> ~2,000 steps from a 15-min brisk walk. Counts towards your 8k daily target.</div>`;
   }
 
-  $app.innerHTML = html;
+  if(tab==="notes"){
+    h+=`<div class="card" style="padding:16px"><div class="wt">\u{1F4DD} Session Notes</div>
+      <textarea rows="6" id="sess_notes" style="margin-top:8px" placeholder="Progression observations, form corrections, what to adjust next week..." onblur="doNotes(this.value)">${s.notes||''}</textarea>
+    </div>
+    <button class="btn ${s.completed?'btn-gf':'btn-g'}" onclick="doToggle()">
+      ${s.completed?'\u{2713} Session Complete \u{2014} Tap to Reopen':'Mark Session Complete'}
+    </button>`;
+  }
+  $.innerHTML=h;
 }
 
-function renderProgress() {
-  const completed = [...sessions].filter(s => s.completed).sort((a, b) => a.date.localeCompare(b.date));
+// ----- PICKER -----
+function rPicker(){
+  const s=gsess();
+  if(!s){pickerOpen=false;return render()}
+  const sel=s.selectedExercises||[];
 
-  let html = `
-    <div class="nav-bar">
-      <button class="back" onclick="currentView='home';render()">\u{2190} Back</button>
-      <span class="nav-title">Progress Overview</span>
-      <span></span>
-    </div>
-  `;
+  let h=`<div class="po" onclick="if(event.target===this){pickerOpen=false;render()}"><div class="ps">
+    <h2>Select Exercises</h2><p>Tap to add or remove from this session</p>`;
 
-  EXERCISES.forEach(ex => {
-    html += `
-      <div class="progress-card">
-        <h3>${ex.name}</h3>
-        <div class="progress-header">
-          <span class="col-wk">Wk</span>
-          <span class="col">Her</span>
-          <span class="col">Him</span>
-          ${ex.hasWeight ? '<span class="col">Wt</span>' : ''}
-        </div>
-        ${completed.map((s, i) => {
-          const d = s.exercises[ex.id];
-          return `<div class="progress-row">
-            <span class="col-wk">${i + 1}</span>
-            <span class="col">${d.her.score ? SCORES[d.her.score].emoji : '\u{2014}'}</span>
-            <span class="col">${d.him.score ? SCORES[d.him.score].emoji : '\u{2014}'}</span>
-            ${ex.hasWeight ? `<span class="col">${d.her.weight || '\u{2014}'}kg</span>` : ''}
-          </div>`;
-        }).join('')}
-      </div>
-    `;
+  GROUPS.forEach(g=>{
+    const exs=lib.filter(e=>e.group===g);
+    if(!exs.length)return;
+    h+=`<div class="gl">${GL[g]}</div>`;
+    exs.forEach(ex=>{
+      const on=sel.includes(ex.id);
+      h+=`<div class="pi${on?' on':''}" onclick="doToggleEx('${ex.id}')">
+        <div class="pc">${on?'\u{2713}':''}</div>
+        <div><div class="pn">${ex.name}</div>
+        <div class="pm">${ex.target} ${ex.unit}${ex.note?' \u{00B7} '+ex.note:''}${ex.wt?' \u{00B7} Weighted':''}</div></div>
+      </div>`;
+    });
   });
 
-  html += `
-    <div class="progress-card">
-      <h3>Couples Walk</h3>
-      <div class="progress-header">
-        <span class="col-wk">Wk</span>
-        <span class="col" style="flex:2">Dur</span>
-        <span class="col" style="flex:3;text-align:left">Notes</span>
+  h+=`<button class="btn btn-a mt16" onclick="pickerOpen=false;render()">Done</button>
+    </div></div>`;
+  $.innerHTML=h;
+}
+
+// ----- LIBRARY -----
+function rLibrary(){
+  let h=`<div class="nav">
+    <button class="bk" onclick="view='home';libFormOpen=false;formState=null;render()">\u{2190} Back</button>
+    <span class="nav-t">Exercise Library</span><span style="width:40px"></span>
+  </div>`;
+
+  if(libFormOpen&&formState){
+    h+=`<div class="fc"><h3>${formState.id?'Edit Exercise':'Add New Exercise'}</h3>
+      <div class="fr"><label class="lbl">Exercise name</label>
+        <input class="fld" id="f_name" value="${formState.name}" placeholder="e.g. Lateral Raises"></div>
+      <div class="fri">
+        <div><label class="lbl">Muscle group</label>
+          <select class="fld fld-s" id="f_group">
+            ${GROUPS.map(g=>`<option value="${g}" ${formState.group===g?'selected':''}>${GL[g]}</option>`).join('')}
+          </select></div>
+        <div><label class="lbl">Unit</label>
+          <select class="fld fld-s" id="f_unit">
+            <option value="reps" ${formState.unit==='reps'?'selected':''}>Reps</option>
+            <option value="sec" ${formState.unit==='sec'?'selected':''}>Seconds</option>
+          </select></div>
       </div>
-      ${completed.map((s, i) => `
-        <div class="progress-row">
-          <span class="col-wk">${i + 1}</span>
-          <span class="col" style="flex:2">${s.walk.duration}min</span>
-          <span class="col" style="flex:3;text-align:left;font-size:12px">${s.walk.notes || '\u{2014}'}</span>
+      <div class="fri">
+        <div><label class="lbl">Target reps/sec</label>
+          <input class="fld" id="f_target" value="${formState.target}" placeholder="e.g. 10-12"></div>
+        <div><label class="lbl">Note (optional)</label>
+          <input class="fld" id="f_note" value="${formState.note||''}" placeholder="e.g. Each arm"></div>
+      </div>
+      <div class="tg">
+        <button class="tgb ${formState.wt?'on':'off'}" onclick="doToggleWt()"><span class="tgk"></span></button>
+        <span style="font-size:14px">Uses weight (track kg)</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm-m" onclick="libFormOpen=false;formState=null;render()">Cancel</button>
+        <button class="btn-sm" onclick="doSaveEx()">${formState.id?'Update':'Add to Library'}</button>
+      </div>
+    </div>`;
+  }else{
+    h+=`<button class="btn btn-a" onclick="doNewEx()">+ Add Exercise</button>`;
+  }
+
+  GROUPS.forEach(g=>{
+    const exs=lib.filter(e=>e.group===g);
+    if(!exs.length)return;
+    h+=`<div class="sec"><h2 class="sec-t">${GL[g]}</h2>`;
+    exs.forEach(ex=>{
+      const inTpl=tpl.includes(ex.id);
+      h+=`<div class="lc"><div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><div class="en">${ex.name}</div>
+          <div class="et">${ex.target} ${ex.unit}${ex.note?' \u{00B7} '+ex.note:''}${ex.wt?' \u{00B7} Weighted':''}</div>
+          <div style="margin-top:6px">
+            <span class="tpl-tag ${inTpl?'on':'off'}" onclick="doTplToggle('${ex.id}')">${inTpl?'\u{2713} Template':'+ Template'}</span>
+          </div>
         </div>
-      `).join('')}
-    </div>
-  `;
+        <div style="display:flex;gap:2px">
+          <button style="background:transparent;border:none;font-size:16px;padding:6px" onclick="doEditEx('${ex.id}')">\u{270F}\u{FE0F}</button>
+          <button style="background:transparent;border:none;font-size:16px;padding:6px" onclick="doDelEx('${ex.id}')">\u{1F5D1}</button>
+        </div>
+      </div></div>`;
+    });
+    h+=`</div>`;
+  });
 
-  $app.innerHTML = html;
+  h+=`<div class="sec"><div class="card" style="padding:16px">
+    <h3 style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px">DEFAULT TEMPLATE</h3>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px">Auto-selected when creating a new session</p>
+    ${tpl.length?tpl.map(id=>{const ex=gex(id);return ex?`<div style="font-size:13px;color:var(--txt);padding:4px 0">\u{2022} ${ex.name}</div>`:''}).join(''):'<div style="font-size:13px;color:var(--dim)">No exercises in template</div>'}
+  </div></div>`;
+
+  $.innerHTML=h;
 }
 
-// Actions
-function createSession(dateStr) {
-  const target = dateStr || new Date().toISOString().split("T")[0];
-  const exists = sessions.find(s => s.date === target);
-  if (exists) { currentDate = target; currentView = "session"; currentTab = "log"; showDatePicker = false; customDate = ""; render(); return; }
-  sessions.push(newSession(target));
-  saveSessions(sessions);
-  currentDate = target; currentView = "session"; currentTab = "log"; showDatePicker = false; customDate = ""; render();
+// ----- PROGRESS -----
+function rProgress(){
+  const done=[...sess].filter(s=>s.completed).sort((a,b)=>a.date.localeCompare(b.date));
+  const allIds=[...new Set(done.flatMap(s=>s.selectedExercises||[]))];
+
+  let h=`<div class="nav">
+    <button class="bk" onclick="view='home';render()">\u{2190} Back</button>
+    <span class="nav-t">Progress Overview</span><span style="width:40px"></span>
+  </div>`;
+
+  allIds.forEach(exId=>{
+    const ex=gex(exId);if(!ex)return;
+    const rel=done.filter(s=>s.selectedExercises&&s.selectedExercises.includes(exId));
+    if(!rel.length)return;
+    h+=`<div class="prc"><h3>${ex.name}</h3>
+      <div class="prh"><span class="cw">Wk</span><span class="cc">Her</span><span class="cc">Him</span>${ex.wt?'<span class="cc">Wt</span>':''}</div>
+      ${rel.map((s,i)=>{
+        const d=s.exercises[exId];if(!d)return'';
+        return`<div class="prr"><span class="cw">${i+1}</span>
+          <span class="cc">${d.her.score?SC[d.her.score].e:'\u{2014}'}</span>
+          <span class="cc">${d.him.score?SC[d.him.score].e:'\u{2014}'}</span>
+          ${ex.wt?`<span class="cc">${d.her.weight||'\u{2014}'}kg</span>`:''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  });
+
+  h+=`<div class="prc"><h3>Couples Walk</h3>
+    <div class="prh"><span class="cw">Wk</span><span class="cc" style="flex:2">Dur</span><span class="cc" style="flex:3;text-align:left">Notes</span></div>
+    ${done.map((s,i)=>`<div class="prr"><span class="cw">${i+1}</span><span class="cc" style="flex:2">${s.walk?s.walk.duration:'15'}min</span><span class="cc" style="flex:3;text-align:left;font-size:12px">${s.walk&&s.walk.notes?s.walk.notes:'\u{2014}'}</span></div>`).join('')}
+  </div>`;
+  $.innerHTML=h;
 }
 
-function openSession(dateStr) { currentDate = dateStr; currentView = "session"; currentTab = "log"; expandedEx = null; render(); }
+// ===== ACTIONS =====
 
-function toggleDatePicker() { showDatePicker = !showDatePicker; customDate = ""; render(); }
-
-function deleteSession(dateStr) {
-  if (!confirm("Delete this session permanently?")) return;
-  sessions = sessions.filter(s => s.date !== dateStr);
-  saveSessions(sessions);
-  currentView = "home"; currentDate = null; render();
+// Session
+function doCreate(dateStr){
+  const d=dateStr||today();
+  const ex=sess.find(s=>s.date===d);
+  if(ex){curDate=d;view="session";tab="log";dpOpen=false;dpVal="";return render()}
+  sess.push(mkSess(d,[...tpl]));
+  sv(K.s,sess);curDate=d;view="session";tab="log";dpOpen=false;dpVal="";render();
+}
+function doOpen(d){curDate=d;view="session";tab="log";openEx=null;render()}
+function doDel(){
+  if(!confirm("Delete this session permanently?"))return;
+  sess=sess.filter(s=>s.date!==curDate);
+  sv(K.s,sess);view="home";curDate=null;render();
 }
 
-function updateEx(exId, person, field, value) {
-  const s = sessions.find(x => x.date === currentDate);
-  if (!s) return;
-  if (field === "score") value = parseInt(value);
-  s.exercises[exId][person][field] = value;
-  saveSessions(sessions);
+// Exercise data (using onblur to avoid focus loss)
+function doExUp(exId,person,field,val){
+  const s=gsess();if(!s||!s.exercises[exId])return;
+  if(field==="score")val=parseInt(val);
+  s.exercises[exId][person][field]=val;
+  sv(K.s,sess);
+  if(field==="score")render(); // only re-render for score taps
+}
+function doWalk(f,v){const s=gsess();if(!s)return;s.walk[f]=v;sv(K.s,sess)}
+function doNotes(v){const s=gsess();if(!s)return;s.notes=v;sv(K.s,sess)}
+function doToggle(){const s=gsess();if(!s)return;s.completed=!s.completed;sv(K.s,sess);render()}
+
+// Exercise picker
+function doToggleEx(exId){
+  const s=gsess();if(!s)return;
+  if(!s.selectedExercises)s.selectedExercises=[];
+  const idx=s.selectedExercises.indexOf(exId);
+  if(idx>=0){s.selectedExercises.splice(idx,1);delete s.exercises[exId]}
+  else{s.selectedExercises.push(exId);s.exercises[exId]=mkExData()}
+  sv(K.s,sess);render();
+}
+function doRmEx(exId){
+  const s=gsess();if(!s)return;
+  s.selectedExercises=s.selectedExercises.filter(id=>id!==exId);
+  delete s.exercises[exId];openEx=null;
+  sv(K.s,sess);render();
+}
+
+// Library
+function doNewEx(){
+  formState={name:"",group:"chest",wt:false,unit:"reps",target:"",note:""};
+  libFormOpen=true;render();
+}
+function doEditEx(id){
+  const ex=gex(id);if(!ex)return;
+  formState={...ex};
+  libFormOpen=true;render();
+}
+function doToggleWt(){
+  if(!formState)return;
+  // Read current form values before toggle
+  readFormInputs();
+  formState.wt=!formState.wt;
   render();
 }
-
-function updateWalk(field, value) {
-  const s = sessions.find(x => x.date === currentDate);
-  if (!s) return;
-  s.walk[field] = value;
-  saveSessions(sessions);
-  render();
+function readFormInputs(){
+  if(!formState)return;
+  const n=document.getElementById('f_name');if(n)formState.name=n.value;
+  const g=document.getElementById('f_group');if(g)formState.group=g.value;
+  const u=document.getElementById('f_unit');if(u)formState.unit=u.value;
+  const t=document.getElementById('f_target');if(t)formState.target=t.value;
+  const nt=document.getElementById('f_note');if(nt)formState.note=nt.value;
+}
+function doSaveEx(){
+  readFormInputs();
+  if(!formState.name.trim()||!formState.target.trim()){alert("Name and target are required.");return}
+  if(formState.id){
+    // Edit existing
+    const idx=lib.findIndex(e=>e.id===formState.id);
+    if(idx>=0)lib[idx]={...formState};
+  }else{
+    // Add new
+    const id=gid(formState.name);
+    lib.push({...formState,id});
+  }
+  sv(K.l,lib);libFormOpen=false;formState=null;render();
+}
+function doDelEx(id){
+  const ex=gex(id);if(!confirm(`Delete "${ex.name}" from library?`))return;
+  lib=lib.filter(e=>e.id!==id);
+  tpl=tpl.filter(t=>t!==id);
+  sv(K.l,lib);sv(K.t,tpl);render();
+}
+function doTplToggle(id){
+  const idx=tpl.indexOf(id);
+  if(idx>=0)tpl.splice(idx,1);else tpl.push(id);
+  sv(K.t,tpl);render();
 }
 
-function updateNotes(value) {
-  const s = sessions.find(x => x.date === currentDate);
-  if (!s) return;
-  s.notes = value;
-  saveSessions(sessions);
-  render();
-}
-
-function toggleComplete() {
-  const s = sessions.find(x => x.date === currentDate);
-  if (!s) return;
-  s.completed = !s.completed;
-  saveSessions(sessions);
-  render();
-}
-
-// Initial render
+// ===== INIT =====
 render();
 </script>
 </body>
