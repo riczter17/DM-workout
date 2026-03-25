@@ -170,14 +170,34 @@ function sv(k,v){localStorage.setItem(k,JSON.stringify(v))}
 
 // ===== MIGRATION =====
 function migrate(){
-  // Check if already migrated to v2
+  // Already have data under current keys? Done.
   if(localStorage.getItem(K.s))return;
 
-  // Try old v1 key
+  // Priority 1: Check first-rebuild keys (cw-sessions-v2, cw-library-v1, cw-template-v1)
+  const mid=ld("cw-sessions-v2",null);
+  if(mid&&mid.length){
+    // These sessions already have selectedExercises format
+    const fixed=mid.map(s=>({
+      date:s.date,
+      selectedExercises:s.selectedExercises||Object.keys(s.exercises||{}),
+      exercises:s.exercises||{},
+      walk:s.walk||{duration:"15",pace:"",notes:""},
+      notes:s.notes||"",
+      completed:!!s.completed
+    }));
+    sv(K.s,fixed);
+    // Also migrate library and template if they exist
+    const midLib=ld("cw-library-v1",null);
+    if(midLib)sv(K.l,midLib);
+    const midTpl=ld("cw-template-v1",null);
+    if(midTpl)sv(K.t,midTpl);
+    return;
+  }
+
+  // Priority 2: Check original v1 key (couples-workout-v1)
   const old=ld("couples-workout-v1",null);
   if(!old||!old.length)return;
 
-  // Convert old sessions to new format
   const converted=old.map(s=>{
     const exIds=Object.keys(s.exercises).filter(id=>OLD_EX_IDS.includes(id));
     return {
