@@ -48,7 +48,10 @@ input,select,textarea{font-family:inherit}
 .sec{margin-top:24px}.stt{font-size:13px;font-weight:600;color:var(--mut);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
 
 .fld{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-size:16px;font-weight:600;outline:none}
+.fld::placeholder{color:var(--dim);font-weight:400;opacity:1}
 .fld-s{font-size:14px;font-weight:400;appearance:none}
+.wsel{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-size:16px;font-weight:600;outline:none;appearance:none}
+.var-note{width:100%;padding:8px 10px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:var(--acc);font-size:12px;font-style:italic;outline:none;margin-top:8px;margin-bottom:4px}
 .lbl{display:block;font-size:11px;color:var(--mut);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
 
 .crd{background:var(--card);border-radius:12px;border:1px solid var(--bdr)}
@@ -147,6 +150,8 @@ var GROUPS=["legs","chest","shoulders","back","core"];
 var GL={legs:"Legs",chest:"Chest",shoulders:"Shoulders",back:"Back",core:"Core"};
 var GROUP_SORT={legs:10,chest:20,shoulders:25,back:40,core:50};
 var SC={1:{l:"Easy",e:"\u{1F7E2}",d:"Could do more"},2:{l:"Hard",e:"\u{1F7E1}",d:"Completed but challenging"},3:{l:"Failed",e:"\u{1F534}",d:"Didn't complete target"}};
+var VER="v2.0";
+var DB_WT=[4,5.5,7,8.5,10,11.5,13,14.5,16,17.5,19,20.5,22,23.5,25,26.5,28,29.5,31,32.5,34,35.5,37,38.5,40];
 
 var DEF_LIB=[
   {id:"squats",name:"Bodyweight Squats",group:"legs",wt:false,unit:"reps",target:"10-12",note:"",sort:10},
@@ -221,8 +226,8 @@ function fd(d){return new Date(d+"T00:00:00").toLocaleDateString("en-GB",{weekda
 function wn(d){var s=sess.slice().sort(function(a,b){return a.date.localeCompare(b.date)});return s.findIndex(function(x){return x.date===d})+1}
 function gid(n){return n.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')+'_'+Date.now().toString(36)}
 function gs(){return sess.find(function(s){return s.date===curDate})}
-function td(){return new Date().toISOString().split("T")[0]}
-function mkD(){return{her:{r1:"",r2:"",weight:"",score:null},him:{r1:"",r2:"",weight:"",score:null}}}
+function td(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function mkD(){return{her:{r1:"",r2:"",weight:"",score:null},him:{r1:"",r2:"",weight:"",score:null},variation:""}}
 
 function sortIds(ids){
   return ids.slice().sort(function(a,b){
@@ -249,15 +254,15 @@ function render(){
 
 function rHome(){
   var sorted=sess.slice().sort(function(a,b){return b.date.localeCompare(a.date)});
-  var h='<div class="hdr"><div class="hi">\u{1F46B}</div><h1>Couples Workout</h1><p>Saturday Programme Tracker</p></div>';
+  var h='<div class="hdr"><div class="hi">\u{1F46B}</div><h1>Couples Workout</h1><p>Saturday Programme Tracker</p><p style="font-size:11px;color:var(--dim);margin-top:6px">'+VER+'</p></div>';
   h+='<button class="btn ba" onclick="doCreate()">+ Start Today\'s Session</button>';
 
   if(!dpOpen){
-    h+='<button class="btn bd" onclick="dpOpen=true;dpVal=\'\';render()">\u{1F4C5} Log a Past Session</button>';
+    h+='<button class="btn bd" onclick="dpOpen=true;dpVal=\'\';render()">\u{1F4C5} New Session (pick date)</button>';
   }else{
     var ex=dpVal&&sess.find(function(s){return s.date===dpVal});
     h+='<div class="dpc"><div class="dph"><span>Select session date</span><button onclick="dpOpen=false;dpVal=\'\';render()">\u{2715}</button></div>';
-    h+='<input type="date" class="di" value="'+dpVal+'" max="'+td()+'" onchange="dpVal=this.value;render()">';
+    h+='<input type="date" class="di" value="'+dpVal+'" onchange="dpVal=this.value;render()">';
     if(ex)h+='<div class="dex">Session exists. Tap below to open.</div>';
     h+='<button class="btn ba mt12" '+(dpVal?'':'disabled')+' onclick="doCreate(\''+dpVal+'\')">'+(ex?'Open Session':'Create Session')+'</button></div>';
   }
@@ -314,16 +319,20 @@ function rSession(){
         if(isO){
           h+='<div class="eb">';
           if(hint)h+='<div class="lwk">'+hint+'</div>';
+          if(d.variation)h+='<div style="padding:6px 10px;background:var(--acc-s);border-radius:8px;font-size:12px;color:var(--acc);font-style:italic;margin-bottom:10px">\u{1F4CC} '+d.variation+'</div>';
           ["her","him"].forEach(function(pr){
             var pd=d[pr];
+            var wtOpts='<option value="">-</option>';
+            DB_WT.forEach(function(w){wtOpts+='<option value="'+w+'"'+(pd.weight==w?' selected':'')+'>'+w+'</option>'});
             h+='<div class="pb"><div class="plb">'+(pr==="her"?"\u{1F469} Her":"\u{1F468} Him")+'</div>';
             h+='<div class="ir"><div class="ig"><label class="lbl">R1</label><input type="number" inputmode="numeric" class="fld" value="'+pd.r1+'" placeholder="'+ex.target.split('-')[0]+'" onblur="doExUp(\''+exId+'\',\''+pr+'\',\'r1\',this.value)"></div>';
             h+='<div class="ig"><label class="lbl">R2</label><input type="number" inputmode="numeric" class="fld" value="'+pd.r2+'" placeholder="'+ex.target.split('-')[0]+'" onblur="doExUp(\''+exId+'\',\''+pr+'\',\'r2\',this.value)"></div>';
-            if(ex.wt)h+='<div class="ig"><label class="lbl">kg</label><input type="number" inputmode="decimal" class="fld" value="'+pd.weight+'" placeholder="5" onblur="doExUp(\''+exId+'\',\''+pr+'\',\'weight\',this.value)"></div>';
+            if(ex.wt)h+='<div class="ig"><label class="lbl">kg</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'weight\',this.value)">'+wtOpts+'</select></div>';
             h+='</div><div class="srw">';
             [1,2,3].forEach(function(sc){h+='<button class="sb'+(pd.score===sc?' on':'')+'" onclick="doExUp(\''+exId+'\',\''+pr+'\',\'score\','+sc+')"><span class="sse">'+SC[sc].e+'</span><span class="ssl">'+SC[sc].l+'</span></button>'});
             h+='</div></div>';
           });
+          h+='<input class="var-note" value="'+(d.variation||'')+'" placeholder="Variation note (e.g. 2-sec hold at top)" onblur="doVarNote(\''+exId+'\',this.value)">';
           h+='<button class="rmx" onclick="doRmEx(\''+exId+'\')">\u{2212} Remove from session</button></div>';
         }
         h+='</div>';
@@ -464,7 +473,12 @@ function doExUp(exId,person,field,val){
   if(field==="score")val=parseInt(val);
   s.exercises[exId][person][field]=val;
   sv(K.s,sess);
-  if(field==="score")render();
+  if(field==="score"||field==="weight")render();
+}
+function doVarNote(exId,val){
+  var s=gs();if(!s||!s.exercises[exId])return;
+  s.exercises[exId].variation=val;
+  sv(K.s,sess);
 }
 function doWalk(f,v){var s=gs();if(!s)return;s.walk[f]=v;sv(K.s,sess)}
 function doNotes(v){var s=gs();if(!s)return;s.notes=v;sv(K.s,sess)}
