@@ -80,6 +80,7 @@ input,select,textarea{font-family:inherit}
 .rmx{background:transparent;border:none;color:var(--red);font-size:13px;font-weight:600;padding:6px 0;margin-top:8px;width:auto}
 .pwt{background:transparent;border:1px dashed var(--bdr);border-radius:6px;color:var(--mut);font-size:11px;font-weight:600;padding:6px 10px;margin-top:4px;width:auto;cursor:pointer}
 .pwt:active{background:var(--acc-s);border-color:var(--acc);color:var(--acc)}
+.add-btns{display:flex;gap:6px;margin-top:4px}
 
 .wc{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--bdr)}
 .wtl{font-size:16px;font-weight:700;color:var(--wht);margin-bottom:4px}
@@ -152,7 +153,7 @@ var GROUPS=["legs","chest","shoulders","back","core"];
 var GL={legs:"Legs",chest:"Chest",shoulders:"Shoulders",back:"Back",core:"Core"};
 var GROUP_SORT={legs:10,chest:20,shoulders:25,back:40,core:50};
 var SC={1:{l:"Easy",e:"\u{1F7E2}",d:"Could do more"},2:{l:"Hard",e:"\u{1F7E1}",d:"Completed but challenging"},3:{l:"Failed",e:"\u{1F534}",d:"Didn't complete target"}};
-var VER="v2.1";
+var VER="v2.2";
 var DB_WT=[4,5.5,7,8.5,10,11.5,12,13,14.5,16,17.5,19,20.5,22,23.5,25,26.5,28,29.5,31,32.5,34,35.5,37,38.5,40];
 
 var DEF_LIB=[
@@ -314,7 +315,7 @@ function rSession(){
 
         var prev=sess.filter(function(x){return x.completed&&x.date!==curDate&&x.selectedExercises&&x.selectedExercises.indexOf(exId)>=0}).sort(function(a,b){return b.date.localeCompare(a.date)});
         var hint="";
-        if(prev.length>0&&prev[0].exercises[exId]){var p=prev[0].exercises[exId];hint='Last wk: Her '+(p.her.score?SC[p.her.score].e:'\u{2014}')+(p.her.weight?' '+p.her.weight+'kg':'')+' Him '+(p.him.score?SC[p.him.score].e:'\u{2014}')+(p.him.weight?' '+p.him.weight+'kg':'');}
+        if(prev.length>0&&prev[0].exercises[exId]){var p=prev[0].exercises[exId];hint='Last wk: Her '+(p.her.score?SC[p.her.score].e:'\u{2014}')+(p.her.weight?' '+p.her.weight+'kg':'')+(p.her.hold?' '+p.her.hold+'s hold':'')+' Him '+(p.him.score?SC[p.him.score].e:'\u{2014}')+(p.him.weight?' '+p.him.weight+'kg':'')+(p.him.hold?' '+p.him.hold+'s hold':'');}
 
         h+='<div class="ec"><div class="eh" onclick="openEx=openEx===\''+exId+'\'?null:\''+exId+'\';render()"><div class="ehl"><span class="es">'+st+'</span><div><div class="en">'+ex.name+'</div><div class="et">2 \u{00D7} '+ex.target+' '+ex.unit+(ex.note?' ('+ex.note+')':'')+'</div></div></div><div class="epr">'+(hd?SC[d.her.score].e:'')+(hm?SC[d.him.score].e:'')+'<span class="chv">'+(isO?'\u{25B2}':'\u{25BC}')+'</span></div></div>';
 
@@ -325,14 +326,24 @@ function rSession(){
           ["her","him"].forEach(function(pr){
             var pd=d[pr];
             var showWt=ex.wt||pd.showWt||pd.weight;
+            var showHold=pd.showHold||pd.hold;
             var wtOpts='<option value="">-</option>';
             DB_WT.forEach(function(w){wtOpts+='<option value="'+w+'"'+(pd.weight==w?' selected':'')+'>'+w+'</option>'});
+            var rOpts1='<option value="">-</option>';
+            var rOpts2='<option value="">-</option>';
+            for(var ri=0;ri<=30;ri++){rOpts1+='<option value="'+ri+'"'+(pd.r1==ri&&pd.r1!==""?' selected':'')+'>'+ri+'</option>';rOpts2+='<option value="'+ri+'"'+(pd.r2==ri&&pd.r2!==""?' selected':'')+'>'+ri+'</option>'}
+            var hOpts='<option value="">-</option>';
+            for(var hi=1;hi<=60;hi++){hOpts+='<option value="'+hi+'"'+(pd.hold==hi?' selected':'')+'>'+hi+'</option>'}
             h+='<div class="pb"><div class="plb">'+(pr==="her"?"\u{1F469} Her":"\u{1F468} Him")+'</div>';
-            h+='<div class="ir"><div class="ig"><label class="lbl">R1</label><input type="number" inputmode="numeric" class="fld" value="'+pd.r1+'" placeholder="'+ex.target.split('-')[0]+'" onblur="doExUp(\''+exId+'\',\''+pr+'\',\'r1\',this.value)"></div>';
-            h+='<div class="ig"><label class="lbl">R2</label><input type="number" inputmode="numeric" class="fld" value="'+pd.r2+'" placeholder="'+ex.target.split('-')[0]+'" onblur="doExUp(\''+exId+'\',\''+pr+'\',\'r2\',this.value)"></div>';
+            h+='<div class="ir"><div class="ig"><label class="lbl">R1</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r1\',this.value)">'+rOpts1+'</select></div>';
+            h+='<div class="ig"><label class="lbl">R2</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r2\',this.value)">'+rOpts2+'</select></div>';
             if(showWt)h+='<div class="ig"><label class="lbl">kg</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'weight\',this.value)">'+wtOpts+'</select></div>';
+            if(showHold)h+='<div class="ig"><label class="lbl">Hold (s)</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'hold\',this.value)">'+hOpts+'</select></div>';
             h+='</div>';
-            if(!ex.wt&&!showWt)h+='<button class="pwt" onclick="doPersonWt(\''+exId+'\',\''+pr+'\')">+ Add weight</button>';
+            var addBtns=[];
+            if(!ex.wt&&!showWt)addBtns.push('<button class="pwt" onclick="doPersonWt(\''+exId+'\',\''+pr+'\')">+ Weight</button>');
+            if(!showHold)addBtns.push('<button class="pwt" onclick="doPersonHold(\''+exId+'\',\''+pr+'\')">+ Hold</button>');
+            if(addBtns.length)h+='<div class="add-btns">'+addBtns.join('')+'</div>';
             h+='<div class="srw">';
             [1,2,3].forEach(function(sc){h+='<button class="sb'+(pd.score===sc?' on':'')+'" onclick="doExUp(\''+exId+'\',\''+pr+'\',\'score\','+sc+')"><span class="sse">'+SC[sc].e+'</span><span class="ssl">'+SC[sc].l+'</span></button>'});
             h+='</div></div>';
@@ -449,10 +460,11 @@ function rProgress(){
     var rel=done.filter(function(s){return s.selectedExercises&&s.selectedExercises.indexOf(exId)>=0});
     if(!rel.length)return;
     var hasAnyWt=ex.wt||rel.some(function(s){var d=s.exercises[exId];return d&&(d.her.weight||d.him.weight)});
-    h+='<div class="prc"><h3>'+ex.name+'</h3><div class="prh"><span class="cwk">Wk</span><span class="ccl">Her</span><span class="ccl">Him</span>'+(hasAnyWt?'<span class="ccl">Her kg</span><span class="ccl">Him kg</span>':'')+'</div>';
+    var hasAnyHold=rel.some(function(s){var d=s.exercises[exId];return d&&(d.her.hold||d.him.hold)});
+    h+='<div class="prc"><h3>'+ex.name+'</h3><div class="prh"><span class="cwk">Wk</span><span class="ccl">Her</span><span class="ccl">Him</span>'+(hasAnyWt?'<span class="ccl">Her kg</span><span class="ccl">Him kg</span>':'')+(hasAnyHold?'<span class="ccl">Her hold</span><span class="ccl">Him hold</span>':'')+'</div>';
     rel.forEach(function(s,i){
       var d=s.exercises[exId];if(!d)return;
-      h+='<div class="prr"><span class="cwk">'+(i+1)+'</span><span class="ccl">'+(d.her.score?SC[d.her.score].e:'\u{2014}')+'</span><span class="ccl">'+(d.him.score?SC[d.him.score].e:'\u{2014}')+'</span>'+(hasAnyWt?'<span class="ccl">'+(d.her.weight?d.her.weight:'\u{2014}')+'</span><span class="ccl">'+(d.him.weight?d.him.weight:'\u{2014}')+'</span>':'')+'</div>';
+      h+='<div class="prr"><span class="cwk">'+(i+1)+'</span><span class="ccl">'+(d.her.score?SC[d.her.score].e:'\u{2014}')+'</span><span class="ccl">'+(d.him.score?SC[d.him.score].e:'\u{2014}')+'</span>'+(hasAnyWt?'<span class="ccl">'+(d.her.weight?d.her.weight:'\u{2014}')+'</span><span class="ccl">'+(d.him.weight?d.him.weight:'\u{2014}')+'</span>':'')+(hasAnyHold?'<span class="ccl">'+(d.her.hold?d.her.hold+'s':'\u{2014}')+'</span><span class="ccl">'+(d.him.hold?d.him.hold+'s':'\u{2014}')+'</span>':'')+'</div>';
     });
     h+='</div>';
   });
@@ -479,7 +491,7 @@ function doExUp(exId,person,field,val){
   if(field==="score")val=parseInt(val);
   s.exercises[exId][person][field]=val;
   sv(K.s,sess);
-  if(field==="score"||field==="weight")render();
+  if(field==="score"||field==="weight"||field==="hold")render();
 }
 function doVarNote(exId,val){
   var s=gs();if(!s||!s.exercises[exId])return;
@@ -489,6 +501,11 @@ function doVarNote(exId,val){
 function doPersonWt(exId,person){
   var s=gs();if(!s||!s.exercises[exId])return;
   s.exercises[exId][person].showWt=true;
+  sv(K.s,sess);render();
+}
+function doPersonHold(exId,person){
+  var s=gs();if(!s||!s.exercises[exId])return;
+  s.exercises[exId][person].showHold=true;
   sv(K.s,sess);render();
 }
 function doWalk(f,v){var s=gs();if(!s)return;s.walk[f]=v;sv(K.s,sess)}
