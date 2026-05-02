@@ -1,5 +1,13 @@
 # Couples Workout Tracker - Changelog
 
+## v2.3 - 2 May 2026
+- Added ability to change session date after creation
+  - Tap the date in the session header to edit
+  - Date picker with Save/Cancel buttons
+  - Validates against duplicate dates (cannot change to a date with an existing session)
+  - Week number updates automatically after date change
+- Fully backward compatible with v2.0, v2.1, and v2.2 data
+
 ## v2.2 - 1 May 2026
 - Replaced reps number inputs with dropdown rollers (0-30 range, native iOS scroll picker)
 - Added per-person "+ Hold" toggle (same pattern as weight toggle)
