@@ -159,7 +159,7 @@ var GROUPS=["legs","chest","shoulders","back","core"];
 var GL={legs:"Legs",chest:"Chest",shoulders:"Shoulders",back:"Back",core:"Core"};
 var GROUP_SORT={legs:10,chest:20,shoulders:25,back:40,core:50};
 var SC={1:{l:"Easy",e:"\u{1F7E2}",d:"Could do more"},2:{l:"Hard",e:"\u{1F7E1}",d:"Completed but challenging"},3:{l:"Failed",e:"\u{1F534}",d:"Didn't complete target"}};
-var VER="v2.3";
+var VER="v2.4";
 var DB_WT=[4,5.5,7,8.5,10,11.5,12,13,14.5,16,17.5,19,20.5,22,23.5,25,26.5,28,29.5,31,32.5,34,35.5,37,38.5,40];
 
 var DEF_LIB=[
@@ -341,14 +341,17 @@ function rSession(){
             var showHold=pd.showHold||pd.hold;
             var wtOpts='<option value="">-</option>';
             DB_WT.forEach(function(w){wtOpts+='<option value="'+w+'"'+(pd.weight==w?' selected':'')+'>'+w+'</option>'});
+            var isSec=ex.unit==="sec";
             var rOpts1='<option value="">-</option>';
             var rOpts2='<option value="">-</option>';
-            for(var ri=0;ri<=30;ri++){rOpts1+='<option value="'+ri+'"'+(pd.r1==ri&&pd.r1!==""?' selected':'')+'>'+ri+'</option>';rOpts2+='<option value="'+ri+'"'+(pd.r2==ri&&pd.r2!==""?' selected':'')+'>'+ri+'</option>'}
+            if(isSec){for(var ri=5;ri<=180;ri+=5){rOpts1+='<option value="'+ri+'"'+(pd.r1==ri&&pd.r1!==""?' selected':'')+'>'+ri+'s</option>';rOpts2+='<option value="'+ri+'"'+(pd.r2==ri&&pd.r2!==""?' selected':'')+'>'+ri+'s</option>'}}
+            else{for(var ri=0;ri<=30;ri++){rOpts1+='<option value="'+ri+'"'+(pd.r1==ri&&pd.r1!==""?' selected':'')+'>'+ri+'</option>';rOpts2+='<option value="'+ri+'"'+(pd.r2==ri&&pd.r2!==""?' selected':'')+'>'+ri+'</option>'}}
+            var rLbl=isSec?"S1":"R1",rLbl2=isSec?"S2":"R2";
             var hOpts='<option value="">-</option>';
             for(var hi=1;hi<=60;hi++){hOpts+='<option value="'+hi+'"'+(pd.hold==hi?' selected':'')+'>'+hi+'</option>'}
             h+='<div class="pb"><div class="plb">'+(pr==="her"?"\u{1F469} Her":"\u{1F468} Him")+'</div>';
-            h+='<div class="ir"><div class="ig"><label class="lbl">R1</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r1\',this.value)">'+rOpts1+'</select></div>';
-            h+='<div class="ig"><label class="lbl">R2</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r2\',this.value)">'+rOpts2+'</select></div>';
+            h+='<div class="ir"><div class="ig"><label class="lbl">'+rLbl+'</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r1\',this.value)">'+rOpts1+'</select></div>';
+            h+='<div class="ig"><label class="lbl">'+rLbl2+'</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'r2\',this.value)">'+rOpts2+'</select></div>';
             if(showWt)h+='<div class="ig"><label class="lbl">kg</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'weight\',this.value)">'+wtOpts+'</select></div>';
             if(showHold)h+='<div class="ig"><label class="lbl">Hold (s)</label><select class="wsel" onchange="doExUp(\''+exId+'\',\''+pr+'\',\'hold\',this.value)">'+hOpts+'</select></div>';
             h+='</div>';

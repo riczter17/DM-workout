@@ -1,5 +1,14 @@
 # Couples Workout Tracker - Changelog
 
+## v2.4 - 3 May 2026
+- Timer-based exercises (unit: "sec") now use a dedicated seconds dropdown
+  - Range: 5 to 180 seconds in 5-second increments
+  - Options display with "s" suffix (e.g. "40s", "45s")
+  - Labels show "S1" / "S2" (set 1 / set 2) instead of "R1" / "R2"
+- Rep-based exercises unchanged (0-30 reps, labelled "R1" / "R2")
+- Applies to: Plank Hold, Single-arm Holds, and any future timer-based exercises
+- Fully backward compatible with existing session data
+
 ## v2.3 - 2 May 2026
 - Added ability to change session date after creation
   - Tap the date in the session header to edit
